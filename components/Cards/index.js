@@ -19,11 +19,16 @@
 // Create a card for each of the articles and add the card to the DOM.
 
 
-
+const container = document.querySelector('.cards-container');
 
 axios.get(`https://lambda-times-backend.herokuapp.com/articles`)
     .then(data => {
-      console.log(data);
+      for (let topic in data.data.articles) {
+          for (let item of data.data.articles[topic]) {
+            container.appendChild(createCards(item));
+          }
+      
+        }
     })
     .catch(error => {
       console.log('problem', error);
@@ -43,6 +48,19 @@ function createCards(articleInfo) {
     headline.classList.add('headline');
     author.classList.add('author');
     imgContainer.classList.add('img-container');
+
+    //add content
+    headline.textContent = `${articleInfo.headline}`;
     image.src = `${articleInfo.authorPhoto}`;
     by.textContent = `By ${articleInfo.authorName}`;
+
+    //nest elements
+    card.appendChild(headline);
+    card.appendChild(author);
+    author.appendChild(imgContainer);
+    author.appendChild(by);
+    imgContainer.appendChild(image);
+
+    return card;
+
 }
